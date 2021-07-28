@@ -14,6 +14,12 @@ const path = require('path');
 const writeFileAsync = util.promisify(fs.writeFile);
 const readFileAsync = util.promisify(fs.readFile);
 
+// define file paths
+const outputDir = path.resolve(__dirname, 'output');
+const outputPath = path.join(outputDir, 'team.html');
+
+const generator = require('./lib/generateHTML');
+
 // initialize an empty array to hold the team data
 let teamData = [];
 
@@ -107,7 +113,7 @@ const whichKind = [
 // function to inizialize app
 
 function init() {
-
+    promptManager();
 }
 
 function newMember() {
@@ -141,13 +147,40 @@ function promptManager() {
 }
 
 function promptEngineer() {
+    inquirer.prompt(engineerQuestions).then((response) => {
+        let name = response.engineerName;
+        let id = response.engineerId;
+        let email = response.engineerEmail;
+        let github = response.engineerGithub;
 
+        const engineer = new Engineer(name, id, email, github);
+        teamData.push(engineer);
+
+        newMember();
+    })
 }
 
 function promptIntern() {
+    inquirer.prompt(internQuestions).then((response) => {
+        let name = response.internName;
+        let id = response.internId;
+        let email = response.internEmail;
+        let school = response.internSchool;
+
+        const intern = new Intern(name, id, email, school);
+        teamData.push(intern);
+
+        newMember();
+    })
 
 }
 
 function generateTeam() {
-
+    writeFileAsync(outputPath, generator(teamData), function(err) {
+        if (err) {
+            throw err;
+        }
+    })
 }
+
+init();
