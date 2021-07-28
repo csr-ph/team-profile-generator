@@ -18,7 +18,7 @@ const readFileAsync = util.promisify(fs.readFile);
 const outputDir = path.resolve(__dirname, 'output');
 const outputPath = path.join(outputDir, 'team.html');
 
-const generator = require('./lib/generateHTML');
+const render = require('./lib/generateHTML');
 
 // initialize an empty array to hold the team data
 let teamData = [];
@@ -139,7 +139,7 @@ function promptManager() {
         let email = response.managerEmail;
         let officeNumber = response.managerOffice;
 
-        const manager = new Manager(name, id, email, office);
+        const manager = new Manager(name, id, email, officeNumber);
         teamData.push(manager);
         
         newMember();
@@ -176,7 +176,8 @@ function promptIntern() {
 }
 
 function generateTeam() {
-    writeFileAsync(outputPath, generator(teamData), function(err) {
+    const data = render(teamData);
+    writeFileAsync(outputPath, data, function(err) {
         if (err) {
             throw err;
         }
