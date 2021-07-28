@@ -15,10 +15,10 @@ const writeFileAsync = util.promisify(fs.writeFile);
 const readFileAsync = util.promisify(fs.readFile);
 
 // define file paths
-const outputDir = path.resolve(__dirname, 'output');
+const outputDir = path.resolve(__dirname, 'dist');
 const outputPath = path.join(outputDir, 'team.html');
 
-const render = require('./lib/generateHTML');
+const render = require('./src/generateHTML');
 
 // initialize an empty array to hold the team data
 let teamData = [];
